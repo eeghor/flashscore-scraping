@@ -13,7 +13,7 @@ from datetime import datetime
 
 WAIT_TIME = 40 
 
-y_from =2001
+y_from =2005
 y_to = 2016
 
 assert y_from > 2000 and y_to < 2017, ("We've got a problem: you requested years {}-{} but there's only data for 2001-2016...".format(y_from, y_to))
@@ -63,16 +63,22 @@ for competition in comps.split():
 				# print("time=", tm)
 				# get the players
 				p1 = row.find_element_by_xpath(".//td[contains(@class, 'team') and contains(@class, 'home')]").text.strip()
+				
+				if "(" in p1:
+					p1 = p1.split("(")[0].strip()
 				# print("player1=",p1)
 				p2 = row.find_element_by_xpath(".//td[contains(@class, 'team') and contains(@class, 'away')]").text.strip()
+				
+				if "(" in p2:
+					p2 = p2.split("(")[0].strip()
 				# print("player2=",p2)
-				score = row.find_element_by_xpath(".//td[contains(@class, 'score')]").text.replace("&nbsp","").strip()
+				score = row.find_element_by_xpath(".//td[contains(@class, 'score')]").text.replace(" ","").strip()
 				# print("score=",score)
 
 				list_matches.append(TennisMatch(round=current_round, date=full_datetime, time=tm, 
 					p1=p1, p2=p2, score=score))
 		print("ok")
-		
+
 driver.quit()
 
 print("done. retrieved {} match results".format(len(list_matches)))
